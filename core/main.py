@@ -1,15 +1,10 @@
 from fastapi import FastAPI, status, HTTPException, Depends
-from database import engine, Base, get_session
+from .database import engine, Base, get_session
 from contextlib import asynccontextmanager
 from typing import List
 from sqlalchemy.orm import Session
-from schemas import (
-    PaymentCreateSchema,
-    PaymentReadSchema,
-    PaymentUpdateSchema,
-    PaymentResponseSchema,
-)
-from models import Payment
+from .schemas import (PaymentCreateSchema, PaymentUpdateSchema, PaymentResponseSchema,)
+from .models import Payment
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -18,7 +13,7 @@ async def lifespan(app: FastAPI):
     yield
     print("Application is shutdown")
 
-app = FastAPI
+app = FastAPI(lifespan=lifespan)
 
 @app.post("/payments/add", status_code=status.HTTP_201_CREATED, response_model=PaymentResponseSchema,)
 def add_payment(request: PaymentCreateSchema, session: Session = Depends(get_session)):

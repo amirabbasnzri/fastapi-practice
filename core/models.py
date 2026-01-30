@@ -1,6 +1,6 @@
 from sqlalchemy import DateTime, Column, Integer, Text
 from sqlalchemy.sql import func
-from database import Base
+from .database import Base
 
 class Payment(Base):
     __tablename__ = "payments"
