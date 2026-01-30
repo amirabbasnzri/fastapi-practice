@@ -30,7 +30,5 @@ class PaymentReadSchema(BasePaymentSchema):
 
 class PaymentUpdateSchema(BasePaymentSchema):
     id: int
+    description: str
 
-
-class PaymentDeleteSchema(BasePaymentSchema):
-    id: int

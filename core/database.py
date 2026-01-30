@@ -13,7 +13,7 @@ with engine.connect() as conn:
     print("PostgreSQL Version:", version[0])
 
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
-Base = declarative_base
+Base = declarative_base()
 
 @contextmanager
 def get_session():
