@@ -8,10 +8,8 @@ from .models import Payment
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Application is startup")
     Base.metadata.create_all(engine)
     yield
-    print("Application is shutdown")
 
 app = FastAPI(lifespan=lifespan)
 
@@ -19,7 +17,7 @@ app = FastAPI(lifespan=lifespan)
 def add_payment(request: PaymentCreateSchema, session: Session = Depends(get_session)):
     new_payment = Payment(description=request.description, amount=request.amount)
     session.add(new_payment)
-    session.refresh(new_payment)
+    session.flush()
     return new_payment
     
 @app.get("/payments", response_model=List[PaymentResponseSchema])
@@ -42,13 +40,12 @@ def update_amount(id: int, request: PaymentUpdateSchema, session: Session = Depe
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Id does not exist')
     payment.amount = request.amount
     payment.description = request.description
-    session.refresh(payment)
     return payment
 
 
 @app.delete("/payments/delete/{id}", response_model=PaymentResponseSchema)
 def delete_item(id: int, session: Session = Depends(get_session)):
-    payment = session.query(Payment).filter(payment.id == id).first() 
+    payment = session.query(Payment).filter(Payment.id == id).first() 
     if not payment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Id does not exist')
     session.delete(payment)

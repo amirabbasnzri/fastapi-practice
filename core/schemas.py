@@ -1,18 +1,18 @@
-from pydantic import BaseModel, Field, field_validator, field_serializer
+from pydantic import BaseModel, Field, field_validator
 import re
 
 class BasePaymentSchema(BaseModel):
     amount: float = Field()
 
 
+
 class PaymentResponseSchema(BaseModel):
     amount: float = Field()
     id: int = Field()
     description: str = Field()
-     
-    @field_serializer('amount')
-    def amount_serializer(cls, value):
-        return round(value, 2)
+
+    class Config:
+        from_attributes = True
 
 
 class PaymentCreateSchema(BasePaymentSchema):

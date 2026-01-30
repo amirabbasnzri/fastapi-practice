@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from contextlib import contextmanager
+from contextlib import asynccontextmanager
 
 
 DATABASE_URL = "postgresql+psycopg2://postgres:zdfjh.89s$@localhost:5432/mydb"
@@ -15,7 +15,6 @@ with engine.connect() as conn:
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 Base = declarative_base()
 
-@contextmanager
 def get_session():
     session = SessionLocal()
     try:
